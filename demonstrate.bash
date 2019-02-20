@@ -3,7 +3,7 @@
 version="1"
 HUB_URL=${1:-https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com}
 MAX_VERSIONS=${2:-2}
-MAX_SCANS=${3:-10}
+MAX_SCANS=${3:-4}
 
 HUB_USERNAME=${HUB_USERNAME:-sysadmin}
 HUB_PASSWORD=${HUB_PASSWORD:-blackduck}
@@ -36,31 +36,31 @@ done
 
 echo "Done with the demo of strategy 1"
 
-# Having trouble using the REST API to update the Nickname, so leaving this one unfinished for now
-# 
-# echo "==============================================="
-# echo "Demo of microservice scanning model strategy 2"
-# echo "overwrite previous scans/versions but update the"
-# echo "version label in the Nickname field"
-# echo "==============================================="
-# version="1"
-# PROJECT_NAME="microservice-strategy2"
-# while [ ${version} -le ${MAX_SCANS} ]
-# do
-# 	echo "Do another scan using same scan and version name to overwrite prior one"
-# 	start_time=$(date +%s)
-# 	detect --blackduck.url=https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com \
-# 		--blackduck.username=sysadmin \
-# 		--blackduck.password=blackduck \
-# 		--blackduck.trust.cert=true \
-# 		--detect.project.name=${PROJECT_NAME} \
-# 		--detect.project.version.name=LATEST \
-# 		--detect.code.location.name="${PROJECT_NAME}-LATEST" \
-# 		--detect.policy.check.fail.on.severities=ALL jars > ${version}.log 2>&1
-# 	end_time=$(date +%s)
-# 	elapsed_time_seconds=$(expr $end_time - $start_time)
-# 	echo "Took ${elapsed_time_seconds} seconds for detect to scan and analyze version ${version}"
-# 	version=$(expr $version + 1)
-# done
 
-# echo "Done with the demo of strategy 2"
+echo "==============================================="
+echo "Demo of microservice scanning model strategy 2"
+echo "overwrite previous scans/versions but update the"
+echo "version label in the Nickname field"
+echo "==============================================="
+version="1"
+PROJECT_NAME="microservice-strategy2"
+while [ ${version} -le ${MAX_SCANS} ]
+do
+	echo "Do another scan using same scan and version name to overwrite prior one"
+	start_time=$(date +%s)
+	detect --blackduck.url=https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com \
+		--blackduck.username=sysadmin \
+		--blackduck.password=blackduck \
+		--blackduck.trust.cert=true \
+		--detect.project.name=${PROJECT_NAME} \
+		--detect.project.version.name=LATEST \
+		--detect.code.location.name="${PROJECT_NAME}-LATEST" \
+		--detect.project.version.nickname=${version} \
+		--detect.policy.check.fail.on.severities=ALL jars > ${version}.log 2>&1
+	end_time=$(date +%s)
+	elapsed_time_seconds=$(expr $end_time - $start_time)
+	echo "Took ${elapsed_time_seconds} seconds for detect to scan and analyze version ${version}"
+	version=$(expr $version + 1)
+done
+
+echo "Done with the demo of strategy 2"

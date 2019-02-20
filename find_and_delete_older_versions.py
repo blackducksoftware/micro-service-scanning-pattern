@@ -23,6 +23,8 @@ parser.add_argument("--preserve_scans",
 args = parser.parse_args()
 
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', stream=sys.stdout, level=logging.DEBUG)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 hub = HubInstance()
 
