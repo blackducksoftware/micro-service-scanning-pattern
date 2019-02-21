@@ -8,17 +8,33 @@ MAX_SCANS=${3:-4}
 HUB_USERNAME=${HUB_USERNAME:-sysadmin}
 HUB_PASSWORD=${HUB_PASSWORD:-blackduck}
 
+function create_rest_config_file {
+	cat > .restconfig.json <<EOF
+{
+   "baseurl": "${HUB_URL}",
+   "username": "${HUB_USERNAME}",
+   "password": "${HUB_PASSWORD}",
+   "insecure": true,
+   "debug": false
+}	
+EOF
+}
+
+create_rest_config_file
+
 echo "==============================================="
 echo "Demo of microservice scanning model strategy 1"
 echo "using version in scan/version names, but deleting"
 echo "older scans/versions as you go"
 echo "==============================================="
 PROJECT_NAME="microservice-strategy1"
+
 while [ ${version} -le ${MAX_SCANS} ]
 do
 	echo "Create a new version ${version} for project ${PROJECT_NAME}, sending output to ${version}.log"
 	start_time=$(date +%s)
-	detect --blackduck.url=${HUB_URL} \
+	bash <(curl -s https://blackducksoftware.github.io/hub-detect/hub-detect.sh) \
+		--blackduck.url=${HUB_URL} \
 		--blackduck.username=${HUB_USERNAME} \
 		--blackduck.password=${HUB_PASSWORD} \
 		--blackduck.trust.cert=true \
@@ -48,7 +64,8 @@ while [ ${version} -le ${MAX_SCANS} ]
 do
 	echo "Do another scan using same scan and version name to overwrite prior one"
 	start_time=$(date +%s)
-	detect --blackduck.url=https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com \
+	bash <(curl -s https://blackducksoftware.github.io/hub-detect/hub-detect.sh) \
+		--blackduck.url=https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com \
 		--blackduck.username=sysadmin \
 		--blackduck.password=blackduck \
 		--blackduck.trust.cert=true \
