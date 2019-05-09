@@ -22,7 +22,7 @@ parser.add_argument("--preserve_scans",
 
 args = parser.parse_args()
 
-logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', stream=sys.stdout, level=logging.INFO)
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
@@ -39,13 +39,13 @@ if project:
 		versions_to_delete = sorted_versions[:-args.num_versions_to_keep]
 
 		version_names_being_deleted = [v['versionName'] for v in versions_to_delete]
-		logging.debug("Deleting versions {}".format(version_names_being_deleted))
+		logging.info("Deleting versions {}".format(version_names_being_deleted))
 
 		for version_to_delete in versions_to_delete:
 			hub.delete_project_version_by_name(args.project_name, version_to_delete['versionName'])
 			logging.info("Deleted version {}".format(version_to_delete['versionName']))
 	else:
-		logging.debug("Found {} versions which is not greater than the number to keep {}".format(
+		logging.info("Found {} versions which is not greater than the number to keep {}".format(
 			len(sorted_versions), args.num_versions_to_keep))
 else:
 	logging.debug("No project found with the name {}".format(args.project_name))
