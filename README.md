@@ -15,8 +15,6 @@ There are two basic strategies for how to setup the scans for a micro-service:
 1. Use the (rapidly changing) version of the micro-service in the Black Duck scan/version names, and then purge/delete older scans/versions as you go.
 2. Do not use the (rapidly changing) version in scan/version names, instead over-write the prior scan/version each time you scan, and place the version label elsewhere in the project-version, e.g. in the Nickname field.
 
-Only the first strategy is currently demonstrated as we are still working on implementation of the second.
-
 # To run the demo
 
 - You need python3 and a virtualenv environment is highly recommended.
