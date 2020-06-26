@@ -1,1 +1,1 @@
-blackduck>=0.0.10
+blackduck>=0.0.50
