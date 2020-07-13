@@ -15,10 +15,7 @@ parser = argparse.ArgumentParser("Find and delete older project-versions unless 
 parser.add_argument("project_name")
 parser.add_argument("num_versions_to_keep", 
 	type=int, 
-	help="Give the number of (newest) versions to keep. Any (non-RELEASED, non-ARCHIVED) versions above this number will be deleted.")
-parser.add_argument("--preserve_scans", 
-	action='store_true', 
-	help='Set this option to preserve the scans associated with the versions being deleted. Default is False, so we will cleanup the scans as well')
+	help="Give the number of (newest, Non-RELEASED) versions to keep.")
 
 args = parser.parse_args()
 
@@ -35,20 +32,20 @@ if project:
 	versions = hub.get_project_versions(project, limit=9999)
 	sorted_versions = sorted(versions['items'], key = lambda i: i['createdAt'])
 
-	un_released_versions = list(filter(lambda v: v['phase'] not in  ['RELEASED', 'ARCHIVED'], sorted_versions))
-	logging.debug(f"Found {len(un_released_versions)} versions which are not in phase RELEASED or ARCHIVED of which we will keep only {args.num_versions_to_keep}")
+	un_released_versions = list(filter(lambda v: v['phase'] not in  ['RELEASED'], sorted_versions))
+	logging.debug(f"Found {len(un_released_versions)} versions which are not in phase RELEASED of which we will keep only {args.num_versions_to_keep}")
 
 	if len(un_released_versions) > args.num_versions_to_keep:
 		versions_to_delete = un_released_versions[:-args.num_versions_to_keep]
 
 		version_names_being_deleted = [v['versionName'] for v in versions_to_delete]
-		logging.info("Deleting (the oldest) non-RELEASED, non-ARCHIVED versions: {}".format(version_names_being_deleted))
+		logging.info("Deleting (the oldest) non-RELEASED versions: {}".format(version_names_being_deleted))
 
 		for version_to_delete in versions_to_delete:
 			hub.delete_project_version_by_name(args.project_name, version_to_delete['versionName'])
 			logging.info("Deleted version {}".format(version_to_delete['versionName']))
 	else:
-		logging.info("Found {} (non-RELEASED, non-ARCHIVED) versions which is not greater than the number to keep {}".format(
+		logging.info("Found {} (non-RELEASED) versions which is not greater than the number to keep {}".format(
 			len(un_released_versions), args.num_versions_to_keep))
 else:
 	logging.debug("No project found with the name {}".format(args.project_name))
