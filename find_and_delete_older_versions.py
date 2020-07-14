@@ -22,7 +22,7 @@ args = parser.parse_args()
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s: %(message)s', stream=sys.stderr, level=logging.DEBUG)
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
-logging.getLogger("blackduck").setLevel(logging.WARNING)
+logging.getLogger("blackduck.HubRestApi").setLevel(logging.WARNING)
 
 hub = HubInstance()
 
@@ -32,8 +32,11 @@ if project:
 	versions = hub.get_project_versions(project, limit=9999)
 	sorted_versions = sorted(versions['items'], key = lambda i: i['createdAt'])
 
-	un_released_versions = list(filter(lambda v: v['phase'] not in  ['RELEASED'], sorted_versions))
-	logging.debug(f"Found {len(un_released_versions)} versions which are not in phase RELEASED of which we will keep only {args.num_versions_to_keep}")
+	# un_released_versions = list(filter(lambda v: v['phase'] not in  ['RELEASED'], sorted_versions))
+	# logging.debug(f"Found {len(un_released_versions)} versions which are not in phase RELEASED of which we will keep only {args.num_versions_to_keep}")
+
+	un_released_versions = list(filter(lambda v: v['phase'] not in  ['RELEASED', 'ARCHIVED'], sorted_versions))
+	logging.debug(f"Found {len(un_released_versions)} versions which are not in phase RELEASED or ARCHIVED of which we will keep only {args.num_versions_to_keep}")
 
 	if len(un_released_versions) > args.num_versions_to_keep:
 		versions_to_delete = un_released_versions[:-args.num_versions_to_keep]

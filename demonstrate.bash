@@ -1,12 +1,27 @@
 #!/bin/bash
 
+#
+# A script to demonstrate scanning a micro- or web-service which is being
+# developed on a single branch with automated build/deployment happening off that branch
+#
+
+#
+# Defaults and parameters
+#
 version="1"
 HUB_URL=${1:-https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com}
-MAX_VERSIONS=${2:-2}
+MAX_VERSIONS=${2:-4}
 MAX_SCANS=${3:-10}
 
 HUB_USERNAME=${HUB_USERNAME:-sysadmin}
 HUB_PASSWORD=${HUB_PASSWORD:-blackduck}
+
+#
+# Function to create the authentication credentials for using the Black Duck python
+# library, blackduck, see 
+# 		https://github.com/blackducksoftware/hub-rest-api-python
+# 		https://pypi.org/project/blackduck/
+#
 
 function create_rest_config_file {
 	cat > .restconfig.json <<EOF
@@ -22,8 +37,10 @@ EOF
 
 create_rest_config_file
 
+#
 # For test/demo purposes, this is a list of versions that pass the tests and get pushed to production
 # but the tests happen sometime after the scan and verions are created
+#
 versions_to_keep=(3 5 8)
 
 echo "==============================================="
