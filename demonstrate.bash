@@ -10,7 +10,7 @@
 #
 version="1"
 HUB_URL=${1:-https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com}
-MAX_VERSIONS=${2:-4}
+MAX_VERSIONS=${2:-2}
 MAX_SCANS=${3:-10}
 
 HUB_USERNAME=${HUB_USERNAME:-sysadmin}
