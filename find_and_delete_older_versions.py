@@ -22,7 +22,7 @@ args = parser.parse_args()
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s: %(message)s', stream=sys.stderr, level=logging.DEBUG)
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
-logging.getLogger("blackduck.HubRestApi").setLevel(logging.WARNING)
+logging.getLogger("blackduck").setLevel(logging.WARNING)
 
 hub = HubInstance()
 

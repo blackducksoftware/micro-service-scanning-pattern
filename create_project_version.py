@@ -12,9 +12,10 @@ parser.add_argument("project_name")
 parser.add_argument("version")
 args = parser.parse_args()
 
-logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', stream=sys.stderr, level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s: %(message)s', stream=sys.stderr, level=logging.DEBUG)
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("blackduck").setLevel(logging.WARNING)
 
 hub = HubInstance()
 
