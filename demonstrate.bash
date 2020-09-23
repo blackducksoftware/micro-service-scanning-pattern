@@ -10,8 +10,8 @@
 #
 version="1"
 HUB_URL=${1:-https://ec2-18-217-189-8.us-east-2.compute.amazonaws.com}
-MAX_VERSIONS=${2:-2}
-MAX_SCANS=${3:-10}
+MAX_VERSIONS_TO_RETAIN=${2:-2}
+NUM_VERSIONS_TO_PRODUCE=${3:-10}
 
 HUB_USERNAME=${HUB_USERNAME:-sysadmin}
 HUB_PASSWORD=${HUB_PASSWORD:-blackduck}
@@ -51,8 +51,10 @@ echo "phase is set to RELEASED or ARCHIVED"
 echo "==============================================="
 PROJECT_NAME="microservice-strategy"
 
-while [ ${version} -le ${MAX_SCANS} ]
+while [ ${version} -le ${NUM_VERSIONS_TO_PRODUCE} ]
 do
+    clone_from_prior_version
+
 	echo -e "Create a new version ${version} for project ${PROJECT_NAME}\n"
 	python create_project_version.py ${PROJECT_NAME} ${version}
 
@@ -66,7 +68,7 @@ do
 	fi
 
 	# This should be run after each (new) scan/version is created
-	python find_and_delete_older_versions.py ${PROJECT_NAME} ${MAX_VERSIONS}
+	python find_and_delete_older_versions.py ${PROJECT_NAME} ${MAX_VERSIONS_TO_RETAIN}
 	echo ""
 	version=$(expr $version + 1)
 done
